@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Producto</title>
+  <link rel="stylesheet" href="css/NewStyle.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+  <a href="#" class="logo">TodoZapatillas</a>
+
+  <button class="menu-toggle" aria-label="Abrir menú" id="menuToggleBtn">☰</button>
+
+  <nav class="menu-principal" id="menuPrincipal">
+    <div class="menu-links">
+      <a href="inicio.html">Inicio</a>
+
+      <div class="menu-con-submenu">
+        <a href="#" class="submenu-toggle">Productos ▾</a>
+        <div class="submenu">
+          <a href="#">Zapatillas</a>
+          <a href="#">Chalas</a>
+        </div>
+      </div>
+
+      <div class="menu-con-submenu">
+        <a href="#" class="submenu-toggle">Ofertas ▾</a>
+        <div class="submenu">
+          <a href="#">Rebajas</a>
+          <a href="#">Promociones</a>
+        </div>
+      </div>
+
+      <a href="#">Soporte</a>
+    </div>
+
+    <form id="buscador" action="#" method="GET" class="buscador">
+      <input
+        type="text"
+        name="query"
+        placeholder="Buscar productos..."
+        aria-label="Buscar productos"
+      />
+      <button type="submit">🔍</button>
+    </form>
+
+    <div class="user-cart">
+        <a href="#" class="carrito" aria-label="Ver carrito">
+            🛒
+            <span id="contador-carrito" class="cart-count">0</span>
+        </a>
+        <div id="user-area">
+            <a href="#" id="login-link">Iniciar Sesión</a>
+        </div>
+        <div id="welcome-area" style="display:none;">
+            <span id="welcome-msg"></span>
+            <button id="logout-btn">Cerrar Sesión</button>
+        </div>
+    </div>
+  </nav>
+</header>
+<body>
+
+  <main class="detalle-container">
+    <div class="detalle-card" id="producto-detalle"></div>
+  </main>
+    <div id="modal-carrito" style="display:none; position:fixed; z-index:999; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
+      <div style="background:white; padding:20px; border-radius:10px;">
+        <p>Producto agregado al carrito. ¿Qué deseas hacer?</p>
+        <button id="seguir-viendo" class="boton">Seguir viendo</button>
+        <button id="ir-carrito" class="boton">Ir al carrito</button>
+      </div>
+    </div>
+
+
+  <script src="javascrip/catalogo.js"></script>
+  <script src="javascrip/navFuncion.js"></script>
+  <script src="javascrip/userSession.js"></script>
+  <script src="javascrip/carrito.js"></script>
+</body>
+</html>
+</body>
+</html>
