@@ -1,0 +1,325 @@
+/* Diseño de vista del catálogo */
+.catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-content h3 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+}
+
+.price {
+  font-weight: bold;
+  color: #e91e63;
+  margin-top: auto;
+}
+
+@media (max-width: 600px) {
+  .card-content h3 {
+    font-size: 1rem;
+  }
+  .catalogo-grid {
+    padding: 1rem;
+    gap: 1rem;
+  }
+}
+/* Detalle*/
+.detalle-descripcion {
+  max-width: 1100px;
+  margin: 1rem auto 3rem;
+  padding: 0 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  font-family: 'Arial', sans-serif;
+}
+
+.detalle-container {
+  display: flex;
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.detalle-imagen-container {
+  flex: 1 1 45%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detalle-imagen {
+  width: 100%;
+  border: 2px solid #b6b6b6;
+  border-radius: 8px;
+  object-fit: cover;
+  max-height: 600px;
+  box-shadow: 0 0 10px rgba(70, 70, 70, 0.5);
+}
+
+.miniaturas-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.miniatura {
+  width: 60px;
+  height: 60px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.miniatura:hover,
+.miniatura.active {
+  border-color: #2196f3;
+}
+
+
+.detalle-info {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'Arial', sans-serif;
+  padding: 50px;
+  background-color: #dddddd;
+  box-shadow: 0 0 10px rgba(167, 167, 167, 0.5); /* sombra difusa */
+  border-radius: 8px;
+}
+
+.detalle-info h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.detalle-info p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* -------- Radios estilo para proveedores, colores y tallas -------- */
+.product-form__input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.product-form__input legend.form__label {
+  width: 100%;
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.product-form__input input[type="radio"] {
+  display: none; /* Ocultamos el input */
+}
+
+.product-form__input label {
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 2px solid transparent;
+  padding: 8px 14px;
+  border-radius: 10px;
+  user-select: none;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  color: #222222;
+  min-width: 48px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+/* Hover */
+.product-form__input label:hover:not(.disabled) {
+  background-color: #ffffff;
+  border-color: rgb(150, 2, 2);
+  color: #858585;
+}
+
+/* Radio seleccionado */
+.product-form__input input[type="radio"]:checked + label {
+  background-color: #ffffff;
+  color: black;
+  border-color: black;
+}
+
+/* Disabled */
+.product-form__input input[type="radio"]:disabled + label {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: #f0b2b2;
+  border-color: #ccc;
+}
+
+/* Colores - círculos y etiqueta oculta */
+.product-form__input:nth-of-type(2) label {
+  width: 20px;
+  height: 40px;
+  border-radius: 100%;
+  color: transparent;
+  font-size: 0;
+  position: relative;
+}
+
+.product-form__input:nth-of-type(2) label::after {
+  content: attr(title);
+  position: absolute;
+  width: max-content;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 600;
+  user-select: none;
+  display: none; /* ocultar texto al lado de color */
+}
+
+/* Cantidad */
+.opciones {
+  margin-bottom: 1.2rem;
+}
+
+.opciones label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.input-cantidad {
+  width: 60px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+/* Botones */
+.botones {
+  margin-top: 1.5rem;
+}
+
+.boton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #f32121;
+  color: #ffeeee;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.boton:hover {
+  background-color: #f85e5e;
+}
+
+/* Responsive - móvil */
+@media screen and (max-width: 768px) {
+  .detalle-container {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .detalle-info h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Modal (igual que antes) */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 90%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.modal-botones {
+  margin-top: 15px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.modal-botones button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#seguir-viendo {
+  background-color: gray;
+  color: white;
+}
+
+#ir-carrito {
+  background-color: red;
+  color: white;
+}

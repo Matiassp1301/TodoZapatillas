@@ -1,0 +1,204 @@
+/* Navegador  */
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f4f4;
+  
+}
+header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #222;
+  color: white;
+  padding: 20px 20px;
+  z-index: 100;
+  
+}
+
+
+.logo {
+  display: block;
+  font-size: 2rem;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+/* Contenedor principal de menú, buscador y user-cart en línea */
+.menu-principal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap; /* para que en móvil baje a dos líneas */
+}
+.menu-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.menu-links a,
+.menu-links .submenu-toggle {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.menu-links a:hover,
+.menu-links .submenu-toggle:hover {
+  background-color: red;
+  border-radius: 5px;
+}
+/* Submenús */
+.submenu {
+  display: none;
+  position: absolute;
+  background-color: #444;
+  margin-top: 5px;
+  border-radius: 5px;
+  flex-direction: column;
+  z-index: 100;
+}
+.menu-con-submenu:hover .submenu {
+  display: flex;
+}
+.submenu a {
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+}
+.submenu a:hover {
+  background-color: red;
+}
+/* Buscador */
+.buscador {
+  display: flex;
+  gap: 5px;
+  flex: 1 1 300px; /* que crezca si hay espacio, mínimo 300px */
+  max-width: 400px;
+}
+.buscador input {
+  flex-grow: 1;
+  padding: 7px 12px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+.buscador button {
+  padding: 7px 12px;
+  background-color: red;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+.buscador button:hover{
+  background-color: white;
+}
+/* Carrito y botones registro/login */
+.user-cart {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  white-space: nowrap;
+}
+.user-cart a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  user-select: none;
+}
+.user-cart a:hover {
+  background-color: red;
+  border-radius: 2px;
+  
+}
+.cart-count {
+  background-color: red;
+  color: white;
+  font-size: 0.55rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  min-width: 18px;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  display: inline-block;
+}
+.user-cart {
+  position: relative;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.carrito {
+  position: relative;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: white;
+}
+
+
+/* Botón menú hamburguesa (móvil) */
+.menu-toggle {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+}
+/* Responsive - móvil */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  .menu-principal {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .menu-principal.active {
+    display: flex;
+  }
+  .menu-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .buscador {
+    max-width: 100%;
+    flex: none;
+  }
+  .user-cart {
+    justify-content: flex-start;
+  }
+  /* Submenús móviles: */
+  .submenu {
+    position: relative;
+    background-color: #333;
+    margin-top: 0;
+  }
+  .menu-con-submenu:hover .submenu {
+    display: none; /* no hover en móvil */
+  }
+  /* Toggle submenu cuando se clickea */
+  .menu-con-submenu.active .submenu {
+    display: flex;
+  }
+}
