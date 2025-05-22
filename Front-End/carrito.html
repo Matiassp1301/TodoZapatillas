@@ -1,1 +1,84 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Producto</title>
+  <link rel="stylesheet" href="css/styleNav.css" />
+  <link rel="stylesheet" href="css/styleCarrito.css">
+</head>
+<body>
+  <header>
+  <a href="#" class="logo">TodoZapatillas</a>
+
+  <button class="menu-toggle" aria-label="Abrir menú" id="menuToggleBtn">☰</button>
+
+  <nav class="menu-principal" id="menuPrincipal">
+    <div class="menu-links">
+      <a href="inicio.html">Inicio</a>
+
+      <div class="menu-con-submenu">
+        <a href="#" class="submenu-toggle">Productos ▾</a>
+        <div class="submenu">
+          <a href="#">Zapatillas</a>
+          <a href="#">Chalas</a>
+        </div>
+      </div>
+
+      <div class="menu-con-submenu">
+        <a href="#" class="submenu-toggle">Ofertas ▾</a>
+        <div class="submenu">
+          <a href="#">Rebajas</a>
+          <a href="#">Promociones</a>
+        </div>
+      </div>
+
+      <a href="#">Soporte</a>
+    </div>
+
+    <form id="buscador" action="#" method="GET" class="buscador">
+      <input
+        type="text"
+        name="query"
+        placeholder="Buscar productos..."
+        aria-label="Buscar productos"
+      />
+      <button type="submit">🔍</button>
+    </form>
+
+    <div class="user-cart">
+        <a href="carrito.html" class="carrito" aria-label="Ver carrito">
+            🛒
+            <span id="contador-carrito" class="cart-count">0</span>
+        </a>
+        <div id="user-area">
+            <a href="#" id="login-link">Iniciar Sesión</a>
+        </div>
+        <div id="welcome-area" style="display:none;">
+            <span id="welcome-msg"></span>
+            <button id="logout-btn">Cerrar Sesión</button>
+        </div>
+    </div>
+  </nav>
+</header>
+    <div class="carrito-container">
+  <h2>Tu Carrito de Compras</h2>
+
+  <ul id="productos-carrito"></ul>
+
+  <div id="total-carrito"></div>
+
+  <button id="vaciar-carrito-btn" onclick="vaciarCarrito()">Vaciar Carrito</button>
+</div>
+
+<body>
+
+  <script src="javascrip/catalogo.js"></script>
+  <script src="javascrip/navFuncion.js"></script>
+  <script src="javascrip/userSession.js"></script>
+  <script src="javascrip/carrito.js"></script>
+</body>
+</html>
+</body>
+</html>
