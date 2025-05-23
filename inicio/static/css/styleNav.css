@@ -61,7 +61,7 @@ header {
   display: none;
   position: absolute;
   background-color: #444;
-  margin-top: 3.5px;
+  margin-top: 2.5px;
   border-radius: 5px;
   flex-direction: column;
   z-index: 100;
