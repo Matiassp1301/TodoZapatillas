@@ -20,18 +20,22 @@ from django.urls import path
 
 # Importar las vistas de las paginas
 from inicio.views import inicio # Inicio (Index)
+from inicio.views import carrito # Carrito de compra
+from inicio.views import detalle # Detalle de producto
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     
     # Path Inicio (Catalogo)
-    path("", inicio),
+    path("", inicio), # app inicio, vista inicio (catalogo de productos)
 
     # Path Soporte
 
     # Path Carrito de compra
-
+    path("cart/", carrito), # app inicio, vista carrito
     # Path Perfil de usuario
 
     # Path Detalle de producto
+    path("detalle/", detalle), # app inicio, vista detalle
+    # 
 ]
