@@ -14,4 +14,4 @@ class Producto(models.Model):
     comentario = models.JSONField(default=list, blank=True, null=True)  # lista de strings
 
     def __str__(self):
-        return self.nombre
+        return self.nombre 

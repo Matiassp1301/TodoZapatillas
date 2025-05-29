@@ -16,18 +16,15 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 # Importar las vistas de las paginas
-from inicio.views import inicio # Inicio (Index)
-from inicio.views import carrito # Carrito de compra
-from inicio.views import detalle # Detalle de producto
-
+from inicio.views import inicio, carrito, detalle
 urlpatterns = [
     path("admin/", admin.site.urls),
     
     # Path Inicio (Catalogo)
-    path("", inicio), # app inicio, vista inicio (catalogo de productos)
+    path('', include('inicio.urls')), # app inicio, vista inicio (catalogo de productos)
 
     # Path Soporte
 
@@ -36,6 +33,7 @@ urlpatterns = [
     # Path Perfil de usuario
 
     # Path Detalle de producto
-    path("detalle/", detalle), # app inicio, vista detalle
+    path('detalle/<int:producto_id>/', detalle, name='detalle'),
     # 
+    
 ]

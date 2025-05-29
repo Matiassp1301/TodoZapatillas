@@ -1,15 +1,13 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detalle del Producto</title>
-  <link rel="stylesheet" href="{% static 'css/styleNav.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/styleCatalogo.css' %}" />
+  <title>{{ producto.nombre }}</title>
+    <link rel="stylesheet" href="{% static 'css/styleNav.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/styleCatalogo.css' %}">
 </head>
-
 <body>
   <header>
     <a href="#" class="logo">TodoZapatillas</a>
@@ -19,7 +17,6 @@
     <nav class="menu-principal" id="menuPrincipal">
       <div class="menu-links">
         <a href="/">Inicio</a>
-
         <div class="menu-con-submenu">
           <a href="#" class="submenu-toggle">Productos ▾</a>
           <div class="submenu">
@@ -27,7 +24,6 @@
             <a href="#">Chalas</a>
           </div>
         </div>
-
         <div class="menu-con-submenu">
           <a href="#" class="submenu-toggle">Ofertas ▾</a>
           <div class="submenu">
@@ -35,7 +31,6 @@
             <a href="#">Promociones</a>
           </div>
         </div>
-
         <a href="#">Soporte</a>
       </div>
 
@@ -46,8 +41,7 @@
 
       <div class="user-cart">
         <a href="/cart/" class="carrito" aria-label="Ver carrito">
-          🛒
-          <span id="contador-carrito" class="cart-count">0</span>
+          🛒 <span id="contador-carrito" class="cart-count">0</span>
         </a>
         <div id="user-area">
           <a href="#" id="login-link">Iniciar Sesión</a>
@@ -58,30 +52,56 @@
         </div>
       </div>
     </nav>
-  </header>
-
-  <body>
+</header>
 
     <main class="detalle-container">
-      <div class="detalle-card" id="producto-detalle"></div>
-    </main>
-    <div id="modal-carrito"
-      style="display:none; position:fixed; z-index:999; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
-      <div style="background:white; padding:20px; border-radius:10px;">
-        <p>Producto agregado al carrito. ¿Qué deseas hacer?</p>
-        <button id="seguir-viendo" class="boton">Seguir viendo</button>
-        <button id="ir-carrito" class="boton">Ir al carrito</button>
-      </div>
+        <div class="detalle-imagen-container">
+            <img class="detalle-imagen" src="{{ producto.url_imagen }}" alt="{{ producto.nombre }}">
+        </div>
+        <div class="detalle-info">
+    <h1>{{ producto.nombre }}</h1>
+    <p class="price">Precio: ${{ producto.precio|floatformat:0|intcomma|cut:".0" }}</p>
+    <div class="detalle-descripcion">
+        <p>{{ producto.descripcion }}</p>
     </div>
-
-
-    <script src="{% static 'js/catalogo.js' %}"></script>
-    <script src="{% static 'js/navFuncion.js' %}"></script>
-    <script src="{% static 'js/userSession.js' %}"></script>
-    <script src="{% static 'js/carrito.js' %}"></script>
-  </body>
-
-</html>
+    <div class="detalle-tallas">
+        <p><strong>Tallas disponibles:</strong></p>
+        {% if tallas %}
+            <div class="tallas-grid">
+                {% for talla in tallas %}
+                    <input type="radio" id="talla-{{ forloop.counter0 }}" name="talla" value="{{ talla|floatformat:0 }}" class="talla-radio" {% if forloop.first %}checked{% endif %}><label for="talla-{{ forloop.counter0 }}" class="talla-label">{{ talla|floatformat:0 }}</label>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No hay tallas disponibles.</p>
+        {% endif %}
+    </div>
+    <div class="detalle-colores">
+        <p><strong>Color seleccionado:</strong> <span id="nombre-color">{{ colores_css.0.0|title }}</span></p>
+        {% if colores_css %}
+            <div class="colores-grid">
+                {% for color, colorcss in colores_css %}
+                    <input type="radio" id="color-{{ forloop.counter0 }}" name="color" value="{{ color }}" class="color-radio" {% if forloop.first %}checked{% endif %}>
+                    <label for="color-{{ forloop.counter0 }}" class="color-label" style="background: {{ colorcss }};" title="{{ color }}"></label>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No hay colores disponibles.</p>
+        {% endif %}
+    </div>
+</div>
+    </main>
+  <script src="{% static 'js/navFuncion.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const radios = document.querySelectorAll('input[name="color"]');
+        const nombreColor = document.getElementById('nombre-color');
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                nombreColor.textContent = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+            });
+        });
+    });
+  </script>
 </body>
-
 </html>
