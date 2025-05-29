@@ -83,7 +83,7 @@
   background-color:#c0392b;
 }
 
-contenedor-btn-carrito{
+.contenedor-btn-carrito {
   display: flex;
   justify-content: space-between;
 }

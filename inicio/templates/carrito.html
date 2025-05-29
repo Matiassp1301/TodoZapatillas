@@ -59,21 +59,20 @@
       </div>
     </nav>
   </header>
+    <!-- Dentro de <body> en carrito.html -->
   <div class="carrito-container">
     <h2>Tu Carrito de Compras</h2>
-
+  
     <ul id="productos-carrito"></ul>
-
+  
     <div id="total-carrito"></div>
     <div class="contenedor-btn-carrito">
       <button id="vaciar-carrito-btn" onclick="vaciarCarrito()">Vaciar Carrito</button>
       <button class="comprar-carrito-btn">Comprar</button>
-    </div>
+    </div>     
   </div>
 
-  <script src="{% static 'js/catalogo.js' %}"></script>
   <script src="{% static 'js/navFuncion.js' %}"></script>
-  <script src="{% static 'js/userSession.js' %}"></script>
   <script src="{% static 'js/carrito.js' %}"></script>
 </body>
 
