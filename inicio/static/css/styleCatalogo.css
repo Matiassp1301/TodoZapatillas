@@ -169,6 +169,7 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 8px;
+  margin-bottom: 18px; /* <--- Añade esta línea */
 }
 
 .color-radio {
@@ -200,6 +201,66 @@
 .color-label:hover {
   border-color: #e91e63;
 }
+/* Botones principales */
+.btn-carrito, .btn-comprar {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+/* Botón "Añadir al carrito" */
+.btn-carrito {
+  background: #fff;
+  color: #e91e63;
+  border: 2px solid #e91e63;
+}
+
+.btn-carrito:hover, .btn-carrito:focus {
+  background: #e91e63;
+  color: #fff;
+  border-color: #e91e63;
+}
+
+/* Botón "Comprar ahora" o "Ir al carrito" */
+.btn-comprar {
+  background: #e91e63;
+  color: #fff;
+  border: 2px solid #e91e63;
+}
+
+.btn-comprar:hover, .btn-comprar:focus {
+  background: #c2185b;
+  border-color: #c2185b;
+  color: #fff;
+}
+
+/* Modal para carrito */
+.modal-carrito {
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-carrito-content {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  text-align: center;
+}
+.detalle-botones {
+  margin-top: 18px; /* <--- Añade esta línea */
+}
+
 /* --- Responsive para detalle --- */
 @media screen and (max-width: 768px) {
   .detalle-container {

@@ -89,19 +89,88 @@
             <p>No hay colores disponibles.</p>
         {% endif %}
     </div>
+    <div class="detalle-botones">
+      <button type="button" class="btn-comprar" id="btn-comprar-ahora">Comprar ahora</button>
+      <button type="button" class="btn-carrito" id="btn-agregar-carrito">Añadir al carrito</button>
+    </div>
+    <div id="modal-carrito" class="modal-carrito" style="display:none;">
+      <div class="modal-carrito-content">
+        <p>Producto añadido al carrito.</p>
+        <div style="display:flex; gap:1rem; justify-content:center;">
+          <button id="seguir-navegando" class="btn-carrito">Seguir navegando</button>
+          <button id="ir-carrito" class="btn-comprar">Ir al carrito de compra</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.getElementById('btn-agregar-carrito').onclick = function() {
+        const color = document.querySelector('input[name="color"]:checked')?.value;
+        const talla = document.querySelector('input[name="talla"]:checked')?.value;
+        if (!color || !talla) {
+          alert('Por favor, selecciona color y talla antes de añadir al carrito');
+          return;
+        }
+        const producto = {
+          id: "{{ producto.id }}",
+          nombre: "{{ producto.nombre }}",
+          imagen: "{{ producto.url_imagen }}",
+          precio: {{ producto.precio|floatformat:0 }},
+          color,
+          talla,
+          cantidad: 1
+        };
+        // Usa la función global
+        if (window.agregarAlCarrito) window.agregarAlCarrito(producto);
+        // Muestra el modal
+        document.getElementById('modal-carrito').style.display = 'flex';
+      };
+
+      document.getElementById('seguir-navegando').onclick = function() {
+        document.getElementById('modal-carrito').style.display = 'none';
+      };
+
+      document.getElementById('ir-carrito').onclick = function() {
+        window.location.href = "/cart/";
+      };
+    </script>
 </div>
     </main>
   <script src="{% static 'js/navFuncion.js' %}"></script>
+  <script src="{% static 'js/carrito.js' %}"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const radios = document.querySelectorAll('input[name="color"]');
-        const nombreColor = document.getElementById('nombre-color');
-        radios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                nombreColor.textContent = this.value.charAt(0).toUpperCase() + this.value.slice(1);
-            });
-        });
-    });
+      document.addEventListener('DOMContentLoaded', function() {
+          const radios = document.querySelectorAll('input[name="color"]');
+          const nombreColor = document.getElementById('nombre-color');
+          radios.forEach(radio => {
+              radio.addEventListener('change', function() {
+                  nombreColor.textContent = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+              });
+          });
+      });
   </script>
+  <script>
+  document.getElementById('btn-comprar-ahora').onclick = function() {
+    const color = document.querySelector('input[name="color"]:checked')?.value;
+    const talla = document.querySelector('input[name="talla"]:checked')?.value;
+    if (!color || !talla) {
+      alert('Por favor, selecciona color y talla antes de comprar');
+      return;
+    }
+    const producto = {
+      id: "{{ producto.id }}",
+      nombre: "{{ producto.nombre }}",
+      imagen: "{{ producto.url_imagen }}",
+      precio: {{ producto.precio|floatformat:0 }},
+      color,
+      talla,
+      cantidad: 1
+    };
+    // Usa la función global
+    if (window.agregarAlCarrito) window.agregarAlCarrito(producto);
+    // Redirige al carrito
+    window.location.href = "/cart/";
+  };
+  </script>
+
 </body>
 </html>

@@ -29,7 +29,7 @@ urlpatterns = [
     # Path Soporte
 
     # Path Carrito de compra
-    path("cart/", carrito), # app inicio, vista carrito
+    path('cart/', carrito, name='carrito'), # app inicio, vista carrito
     # Path Perfil de usuario
 
     # Path Detalle de producto
