@@ -72,17 +72,13 @@
   </div>
 
   <script>
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', () => {
-        const producto = {
-          nombre: card.querySelector('h3').textContent,
-          precio: card.querySelector('.price').textContent,
-          imagen: card.querySelector('img').src,
-        };
-        localStorage.setItem('productoSeleccionado', JSON.stringify(producto));
-        window.location.href = 'detalle.html';
-      });
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.getAttribute('data-id');
+      window.location.href = '/detalle/' + id + '/';
     });
+  });
+</script>
   </script>
   <script src="{% static 'js/navFuncion.js' %}"></script>
 </body>
