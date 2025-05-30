@@ -74,6 +74,12 @@
 
   <script src="{% static 'js/navFuncion.js' %}"></script>
   <script src="{% static 'js/carrito.js' %}"></script>
+  //llevar a la página de pago
+  <script>
+    document.querySelector('.comprar-carrito-btn').onclick = function() {
+      window.location.href = "/transbank/";
+    };
+  </script>
 </body>
 
 </html>

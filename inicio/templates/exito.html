@@ -1,11 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago Exitoso - Transbank</title>
-    <link rel="stylesheet" href="css/payment.css">
-    <link rel="stylesheet" href="css/success.css">
+    <link rel="stylesheet" href="{% static 'css/stylepago.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleexito.css' %}">
 </head>
 <body>
     <div class="payment-container success-container">
@@ -18,14 +19,31 @@
             </p>
             <p class="detail-item">
                 <span>Monto:</span>
-                <strong>$50.000</strong>
+                <strong  id="monto-pago">$0</strong>
             </p>
             <p class="detail-item">
                 <span>Fecha:</span>
                 <strong id="current-date"></strong>
             </p>
         </div>
-        <button class="return-button" onclick="window.location.href='/'">Volver a la tienda</button>
+        <button class="return-button" onclick="vaciarCarrito(); window.location.href='/'">Volver a la tienda</button>
     </div>
+    <script>
+        function mostrarMontoPago() {
+            const monto = document.getElementById('monto-pago');
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let total = 0;
+            carrito.forEach(producto => {
+                total += (producto.precio || 0) * (producto.cantidad || 1);
+            });
+            monto.textContent = '$' + total.toLocaleString('es-CL');
+        }
+        document.addEventListener('DOMContentLoaded', mostrarMontoPago);
+        
+        function vaciarCarrito() {
+            localStorage.removeItem('carrito');
+            if (window.actualizarContadorCarrito) window.actualizarContadorCarrito();
+        }
+    </script>
 </body>
 </html>

@@ -1,15 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Pago - Transbank</title>
-    <link rel="stylesheet" href="css/payment.css">
-</head>
+    <link rel="stylesheet" href="{% static 'css/stylepago.css' %}">
 <body>
     <div class="payment-container">
         <div class="payment-header">
-            <img src="https://www.transbankdevelopers.cl/public/library/img/logo_webpay.png" alt="Webpay Logo" class="webpay-logo">
+            <img src="https://www.9mm.cl/wp-content/uploads/2024/07/logo-webpay-transparente.png" alt="Webpay Logo" class="webpay-logo">
             <div class="commerce-info">
                 <p class="commerce-name">Nombre del Comercio</p>
                 <p class="order-number">Orden #123456</p>
@@ -19,7 +19,7 @@
         <div class="payment-details">
             <div class="amount-section">
                 <h2>Total a pagar</h2>
-                <p class="amount">$50.000</p>
+                <p class="amount" id="monto-pago">$0</p>
             </div>
 
             <form id="payment-form" class="payment-form">
@@ -29,21 +29,21 @@
                         <label class="method-option">
                             <input type="radio" name="payment-method" value="credit" checked>
                             <span class="method-content">
-                                <img src="https://www.transbankdevelopers.cl/public/library/img/credit-card-icon.png" alt="Credit Card">
+                                <img src="https://media.istockphoto.com/id/1494518821/es/vector/pago-con-tarjeta-de-cr%C3%A9dito-ilustraci%C3%B3n-vectorial.jpg?s=612x612&w=0&k=20&c=kuiD6vnWsaJvpySUG0KdHMMPAcsAAerEGlCRsrp4xcU=" alt="Credit Card">
                                 Tarjeta de Crédito
                             </span>
                         </label>
                         <label class="method-option">
                             <input type="radio" name="payment-method" value="debit">
                             <span class="method-content">
-                                <img src="https://www.transbankdevelopers.cl/public/library/img/debit-card-icon.png" alt="Debit Card">
+                                <img src="https://bucket.utua.com.br/img/2024/01/c1990836-tarjeta-santander-soy.png" alt="Debit Card">
                                 Tarjeta de Débito
                             </span>
                         </label>
                         <label class="method-option">
                             <input type="radio" name="payment-method" value="oneclick">
                             <span class="method-content">
-                                <img src="https://www.transbankdevelopers.cl/public/library/img/oneclick-icon.png" alt="Oneclick">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc_I_TGk3phuaEkwOccMDdGH3FjlbHr1dciQ&s" alt="Oneclick">
                                 Oneclick
                             </span>
                         </label>
@@ -82,10 +82,71 @@
         </div>
 
         <div class="security-info">
-            <img src="https://www.transbankdevelopers.cl/public/library/img/shield.png" alt="Security Shield" class="security-icon">
+            <img src="https://cdn-icons-png.freepik.com/512/8430/8430139.png" alt="Security Shield" class="security-icon">
             <p>Pago seguro procesado por Webpay Plus</p>
         </div>
     </div>
-    <script type="module" src="/main.js"></script>
+    <script>
+        // Mostrar el total del carrito en la página de pago
+        function mostrarMontoPago() {
+            const monto = document.getElementById('monto-pago');
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let total = 0;
+            carrito.forEach(producto => {
+                total += (producto.precio || 0) * (producto.cantidad || 1);
+            });
+        monto.textContent = '$' + total.toLocaleString('es-CL');
+        }
+        document.addEventListener('DOMContentLoaded', mostrarMontoPago);
+        // Formatear número de tarjeta: 1234 5678 9012 3456
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Solo números
+            value = value.substring(0, 16); // Máximo 16 dígitos
+            let formatted = '';
+            for (let i = 0; i < value.length; i += 4) {
+                if (i > 0) formatted += ' ';
+                formatted += value.substring(i, i + 4);
+            }
+            e.target.value = formatted;
+        });
+        
+        // Formatear fecha de expiración: MM/YY
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Solo números
+            if (value.length > 4) value = value.substring(0, 4);
+            if (value.length > 2) {
+                value = value.substring(0,2) + '/' + value.substring(2);
+            }
+            e.target.value = value;
+        });
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+        const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+        const expiry = document.getElementById('expiry').value;
+        const cvv = document.getElementById('cvv').value;
+
+        if (cardNumber.length !== 16 || !/^\d{16}$/.test(cardNumber)) {
+            alert('Por favor, ingresa un número de tarjeta válido de 16 dígitos.');
+            e.preventDefault();
+            return;
+        }
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+            alert('Por favor, ingresa la fecha de expiración en formato MM/YY.');
+            e.preventDefault();
+            return;
+        }
+        if (cvv.length !== 3 || !/^\d{3}$/.test(cvv)) {
+            alert('Por favor, ingresa un CVV válido de 3 dígitos.');
+            e.preventDefault();
+            return;
+        }
+        // Si todo está bien, redirige a /compra/
+        e.preventDefault(); // Evita el envío real del formulario
+        window.location.href = "/compra/";
+
+        
+    });
+    </script>
+    
+
 </body>
 </html>

@@ -61,3 +61,9 @@ def detalle(request, producto_id):
         'tallas': tallas,
         'colores_css': colores_css
     })
+
+def pago(request):
+    return render(request, 'pago.html')
+
+def exitoCompra(request):
+    return render(request, 'exito.html')
