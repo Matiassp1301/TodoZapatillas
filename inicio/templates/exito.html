@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Exitoso - Transbank</title>
+    <link rel="stylesheet" href="css/payment.css">
+    <link rel="stylesheet" href="css/success.css">
+</head>
+<body>
+    <div class="payment-container success-container">
+        <div class="success-icon">✓</div>
+        <h1>¡Pago Exitoso!</h1>
+        <div class="transaction-details">
+            <p class="detail-item">
+                <span>Número de orden:</span>
+                <strong>#123456</strong>
+            </p>
+            <p class="detail-item">
+                <span>Monto:</span>
+                <strong>$50.000</strong>
+            </p>
+            <p class="detail-item">
+                <span>Fecha:</span>
+                <strong id="current-date"></strong>
+            </p>
+        </div>
+        <button class="return-button" onclick="window.location.href='/'">Volver a la tienda</button>
+    </div>
+</body>
+</html>
