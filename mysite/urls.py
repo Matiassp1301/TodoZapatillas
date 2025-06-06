@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Importar las vistas de las paginas
-from inicio.views import inicio, carrito, detalle, exitoCompra, pago
+from inicio.views import inicio, carrito, detalle, exitoCompra, pago, filtros
 urlpatterns = [
     path("admin/", admin.site.urls),
     
@@ -37,6 +37,8 @@ urlpatterns = [
     # Path Pago
     path('transbank/', pago, name='pago'),
     # Path Exito de compra
-    path('compra/', exitoCompra, name='exitoCompra'),             
+    path('compra/', exitoCompra, name='exitoCompra'),
+    # Path Filtros
+    path('filtros/', filtros, name='filtros'),             
     
 ]
