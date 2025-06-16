@@ -16,6 +16,17 @@
         {% endfor %}
       </select>
     </label>
+    
+    <label>Tipo:
+      <select name="tipo">
+        <option value="">Todos</option>
+        <option value="Hombre" {% if tipo_sel == "Hombre" %}selected{% endif %}>Hombre</option>
+        <option value="Mujer" {% if tipo_sel == "Mujer" %}selected{% endif %}>Mujer</option>
+        <option value="Niño" {% if tipo_sel == "Niño" %}selected{% endif %}>Niño</option>
+        <option value="Niña" {% if tipo_sel == "Niña" %}selected{% endif %}>Niña</option>
+      </select>
+    </label>
+
     <label>Color:
       <select name="color">
         <option value="">Todos</option>

@@ -17,16 +17,17 @@ class Producto(models.Model):
         return self.nombre 
     
 class ProductoSQL(models.Model):
-    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=15)         # <-- Debe existir
     categoria = models.CharField(max_length=15)
     color = models.CharField(max_length=15)
     talla = models.CharField(max_length=10)
     precio = models.FloatField()
     proveedor = models.CharField(max_length=30)
     marca = models.CharField(max_length=100)
-    valoracion = models.FloatField(blank=True, null=True)
+    valoracion = models.FloatField(null=True, blank=True)
     url_imagen = models.TextField()
+    cantidad = models.IntegerField(null=True, blank=True)
 
     class Meta:
         db_table = 'productos'
