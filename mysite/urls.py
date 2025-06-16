@@ -20,8 +20,16 @@ from django.urls import path, include
 
 # Importar las vistas de las paginas
 from inicio.views import inicio, carrito, detalle, exitoCompra, pago
+from users.views import registro, login
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # Path Registro de usuario
+    path('registro/', registro, name='registro'), # app users, vista registro de usuario
+    
+    # Path Login de usuario
+    path('login/', login, name='login'),
     
     # Path Inicio (Catalogo)
     path('', include('inicio.urls')), # app inicio, vista inicio (catalogo de productos)
@@ -34,8 +42,10 @@ urlpatterns = [
 
     # Path Detalle de producto
     path('detalle/<int:producto_id>/', detalle, name='detalle'),
+
     # Path Pago
     path('transbank/', pago, name='pago'),
+
     # Path Exito de compra
     path('compra/', exitoCompra, name='exitoCompra'),             
     

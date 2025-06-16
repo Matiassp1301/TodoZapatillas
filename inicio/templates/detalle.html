@@ -44,7 +44,7 @@
           🛒 <span id="contador-carrito" class="cart-count">0</span>
         </a>
         <div id="user-area">
-          <a href="#" id="login-link">Iniciar Sesión</a>
+          <a href="/login/" id="login-link">Iniciar Sesión</a>
         </div>
         <div id="welcome-area" style="display:none;">
           <span id="welcome-msg"></span>
@@ -82,7 +82,8 @@
             <div class="colores-grid">
                 {% for color, colorcss in colores_css %}
                     <input type="radio" id="color-{{ forloop.counter0 }}" name="color" value="{{ color }}" class="color-radio" {% if forloop.first %}checked{% endif %}>
-                    <label for="color-{{ forloop.counter0 }}" class="color-label" style="background: {{ colorcss }};" title="{{ color }}"></label>
+                    <label for="color-{{ forloop.counter0 }}" class="color-label" style="background: {{ colorcss }}"
+                      title="{{ color }}"></label>
                 {% endfor %}
             </div>
         {% else %}
@@ -114,7 +115,7 @@
           id: "{{ producto.id }}",
           nombre: "{{ producto.nombre }}",
           imagen: "{{ producto.url_imagen }}",
-          precio: {{ producto.precio|floatformat:0 }},
+          precio: "{{ producto.precio|floatformat:0 }}",
           color,
           talla,
           cantidad: 1
@@ -160,7 +161,7 @@
       id: "{{ producto.id }}",
       nombre: "{{ producto.nombre }}",
       imagen: "{{ producto.url_imagen }}",
-      precio: {{ producto.precio|floatformat:0 }},
+      precio: '{{ producto.precio|floatformat:0 }}',
       color,
       talla,
       cantidad: 1
