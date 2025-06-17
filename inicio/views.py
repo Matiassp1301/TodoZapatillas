@@ -125,6 +125,7 @@ def filtros(request):
     precio_min = request.GET.get('precio_min', '')
     precio_max = request.GET.get('precio_max', '')
     tipo = request.GET.get('tipo', '')
+    query = request.GET.get('query', '')
 
     # Base queryset con todos los filtros activos
     productos_qs = ProductoSQL.objects.all()
@@ -146,6 +147,8 @@ def filtros(request):
         productos_qs = productos_qs.filter(precio__gte=precio_min)
     if precio_max:
         productos_qs = productos_qs.filter(precio__lte=precio_max)
+    if query:
+        productos_qs = productos_qs.filter(nombre__icontains=query)
 
     # Precio máximo disponible según los filtros activos
     precio_min_disponible = productos_qs.aggregate(minimo=Min('precio'))['minimo'] or 0
@@ -254,4 +257,5 @@ def filtros(request):
         'precio_min_disponible': precio_min_disponible,
         'precio_max_disponible': precio_max_disponible,
         'tipo_sel': tipo,
+        'query': query,
     })

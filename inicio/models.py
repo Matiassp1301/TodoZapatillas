@@ -18,7 +18,7 @@ class Producto(models.Model):
     
 class ProductoSQL(models.Model):
     nombre = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=15)         # <-- Debe existir
+    tipo = models.CharField(max_length=15)         
     categoria = models.CharField(max_length=15)
     color = models.CharField(max_length=15)
     talla = models.CharField(max_length=10)
