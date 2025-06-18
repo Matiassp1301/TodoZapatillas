@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Filtrar Productos{% endblock %}
+
+{% block content %}
+<div class="filtros-layout" style="display: flex; gap: 2rem; align-items: flex-start;">
+  <!-- Formulario de filtros avanzado -->
+  <form method="get" action="{% url 'filtros' %}" class="filtros-sidebar" style="min-width: 320px; max-width: 400px; background: #fafafa; padding: 1em; border-radius: 8px;">
+    <h2>Filtrar Productos</h2>
+    <label>Categoría:
+      <select name="categoria">
+        <option value="">Todas</option>
+        {% for cat in categorias %}
+          <option value="{{ cat }}" {% if cat == categoria_sel %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    
+    <label>Tipo:
+      <select name="tipo">
+        <option value="">Todos</option>
+        <option value="Hombre" {% if tipo_sel == "Hombre" %}selected{% endif %}>Hombre</option>
+        <option value="Mujer" {% if tipo_sel == "Mujer" %}selected{% endif %}>Mujer</option>
+        <option value="Niño" {% if tipo_sel == "Niño" %}selected{% endif %}>Niño</option>
+        <option value="Niña" {% if tipo_sel == "Niña" %}selected{% endif %}>Niña</option>
+      </select>
+    </label>
+
+    <label>Color:
+      <select name="color">
+        <option value="">Todos</option>
+        {% for c in colores %}
+          <option value="{{ c.color }}" {% if c.color == color_sel %}selected{% endif %}>
+            {{ c.color }} ({{ c.count }})
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    
+    <label>Talla:
+      <select name="talla">
+        <option value="">Todas</option>
+        {% for t in tallas %}
+          <option value="{{ t.talla }}" {% if t.talla == talla_sel %}selected{% endif %}>
+            {{ t.talla }} ({{ t.count }})
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    
+    <label>Marca:
+      <select name="marca">
+        <option value="">Todas</option>
+        {% for m in marcas %}
+          <option value="{{ m.marca }}" {% if m.marca == marca_sel %}selected{% endif %}>
+            {{ m.marca }} ({{ m.count }})
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    
+    <label>Proveedor:
+      <select name="proveedor">
+        <option value="">Todos</option>
+        {% for p in proveedores %}
+          <option value="{{ p.proveedor }}" {% if p.proveedor == proveedor_sel %}selected{% endif %}>
+            {{ p.proveedor }} ({{ p.count }})
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Valoración mínima:</label>
+        <div class="rating-filter" style="margin-bottom: 1em;">
+        <input type="hidden" name="valor_min" id="valor_min" value="{{ valor_min|default:'0' }}">
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
+        </div>
+    <label>Precio máximo:</label>
+        <div style="display: flex; align-items: center; gap: 1em;">
+            <span>${{ precio_min_disponible|floatformat:0 }}</span>
+            <input
+                type="range"
+                name="precio_max"
+                min="{{ precio_min_disponible }}"
+                max="{{ precio_max_disponible }}"
+                value="{{ precio_max|default:precio_max_disponible }}"
+                id="slider-max"
+                style="width: 120px;"
+            >
+            <span>${{ precio_max_disponible|floatformat:0 }}</span>
+        </div>
+        <div style="margin-bottom: 1em;">
+            <span>Hasta: $<span id="max-value">{{ precio_max|default:precio_max_disponible }}</span></span>
+        </div>
+    <div style="display: flex; gap: 1em; align-items: center;">
+      <button type="submit">Filtrar</button>
+      <a href="{% url 'filtros' %}" class="btn-limpiar">Limpiar filtros</a>
+    </div>
+    <input type="text" name="query" placeholder="Buscar producto..." value="{{ query|default:'' }}" style="width: 100%; margin-bottom: 1em;">
+
+  </form>
+
+  <!-- Catálogo visual como en inicio -->
+  <div class="filtros-catalogo" style="flex:1;">
+    <div id="catalogo" class="catalogo-grid">
+      {% for producto in productos %}
+        <div class="card" data-id="{{ producto.id }}">
+          <img src="{{ producto.url_imagen }}" alt="{{ producto.nombre }}">
+          <div class="card-content">
+            <h3>{{ producto.nombre }}</h3>
+            <p class="price">Desde ${{ producto.precio|floatformat:0|intcomma }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<div style="height: 100px;"></div>
+<script>
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.getAttribute('data-id');
+      window.location.href = '/detalle/' + id + '/';
+    });
+  });
+</script>
+<!-- estrella -->
+<script>
+  const stars = document.querySelectorAll('.rating-filter .star');
+  const valorInput = document.getElementById('valor_min');
+  let selected = parseFloat(valorInput.value) || 0;
+
+  function updateStars(val) {
+    stars.forEach(star => {
+      star.classList.toggle('selected', parseInt(star.dataset.value) <= val);
+    });
+  }
+  updateStars(selected);
+
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+        selected = parseInt(this.dataset.value);
+        valorInput.value = selected;
+        updateStars(selected);
+    });
+    star.addEventListener('mouseover', function() {
+        updateStars(parseInt(this.dataset.value));
+    });
+    star.addEventListener('mouseout', function() {
+        updateStars(selected);
+    });
+    });
+</script>
+<!-- precio aaaaa-->
+<script>
+      const sliderMax = document.getElementById('slider-max');
+      const maxValue = document.getElementById('max-value');
+      sliderMax.addEventListener('input', function() {
+        maxValue.textContent = sliderMax.value;
+      });
+</script>
+{% endblock %}

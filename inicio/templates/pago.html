@@ -86,40 +86,70 @@
             <p>Pago seguro procesado por Webpay Plus</p>
         </div>
     </div>
-    <script>
-        // Mostrar el total del carrito en la página de pago
-        function mostrarMontoPago() {
-            const monto = document.getElementById('monto-pago');
-            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            let total = 0;
-            carrito.forEach(producto => {
-                total += (producto.precio || 0) * (producto.cantidad || 1);
-            });
+<script>
+    // Mostrar el total del carrito en la página de pago
+    function mostrarMontoPago() {
+        const monto = document.getElementById('monto-pago');
+        const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        let total = 0;
+        carrito.forEach(producto => {
+            total += (producto.precio || 0) * (producto.cantidad || 1);
+        });
         monto.textContent = '$' + total.toLocaleString('es-CL');
+    }
+    document.addEventListener('DOMContentLoaded', mostrarMontoPago);
+
+    // Formatear número de tarjeta: 1234 5678 9012 3456
+    document.getElementById('card-number').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Solo números
+        value = value.substring(0, 16); // Máximo 16 dígitos
+        let formatted = '';
+        for (let i = 0; i < value.length; i += 4) {
+            if (i > 0) formatted += ' ';
+            formatted += value.substring(i, i + 4);
         }
-        document.addEventListener('DOMContentLoaded', mostrarMontoPago);
-        // Formatear número de tarjeta: 1234 5678 9012 3456
-        document.getElementById('card-number').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Solo números
-            value = value.substring(0, 16); // Máximo 16 dígitos
-            let formatted = '';
-            for (let i = 0; i < value.length; i += 4) {
-                if (i > 0) formatted += ' ';
-                formatted += value.substring(i, i + 4);
-            }
-            e.target.value = formatted;
-        });
-        
-        // Formatear fecha de expiración: MM/YY
-        document.getElementById('expiry').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Solo números
-            if (value.length > 4) value = value.substring(0, 4);
-            if (value.length > 2) {
-                value = value.substring(0,2) + '/' + value.substring(2);
-            }
-            e.target.value = value;
-        });
-        document.getElementById('payment-form').addEventListener('submit', function(e) {
+        e.target.value = formatted;
+    });
+
+    // Formatear fecha de expiración: MM/YY
+    document.getElementById('expiry').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Solo números
+        if (value.length > 4) value = value.substring(0, 4);
+        if (value.length > 2) {
+            value = value.substring(0,2) + '/' + value.substring(2);
+        }
+        e.target.value = value;
+    });
+
+    // Validar fecha de expiración: MM/YY y que no esté expirada
+    function esFechaExpiracionValida(expiry) {
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) return false;
+        const [mes, anio] = expiry.split('/').map(Number);
+        if (mes < 1 || mes > 12) return false;
+        const hoy = new Date();
+        const anioActual = hoy.getFullYear() % 100;
+        const mesActual = hoy.getMonth() + 1;
+        if (anio < anioActual || (anio === anioActual && mes < mesActual)) return false;
+        return true;
+    }
+
+    // Ocultar cuotas si se selecciona débito
+    function actualizarCuotas() {
+        const selected = document.querySelector('input[name="payment-method"]:checked');
+        const cuotas = document.getElementById('installments-section');
+        if (selected && selected.value === 'debit') {
+            cuotas.style.display = 'none';
+        } else {
+            cuotas.style.display = '';
+        }
+    }
+    document.querySelectorAll('input[name="payment-method"]').forEach(function(radio) {
+        radio.addEventListener('change', actualizarCuotas);
+    });
+    document.addEventListener('DOMContentLoaded', actualizarCuotas);
+
+    // Validar datos al enviar el formulario y redirigir si todo está bien
+    document.getElementById('payment-form').addEventListener('submit', function(e) {
         const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
         const expiry = document.getElementById('expiry').value;
         const cvv = document.getElementById('cvv').value;
@@ -129,8 +159,8 @@
             e.preventDefault();
             return;
         }
-        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
-            alert('Por favor, ingresa la fecha de expiración en formato MM/YY.');
+        if (!esFechaExpiracionValida(expiry)) {
+            alert('Por favor, ingresa una fecha de expiración válida y no expirada (MM/YY).');
             e.preventDefault();
             return;
         }
@@ -140,12 +170,10 @@
             return;
         }
         // Si todo está bien, redirige a /compra/
-        e.preventDefault(); // Evita el envío real del formulario
+        e.preventDefault();
         window.location.href = "/compra/";
-
-        
     });
-    </script>
+</script>
     
 
 </body>
