@@ -1,85 +1,211 @@
 {% extends "base.html" %}
 {% load humanize %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TodoZapatillas - Menú Responsive</title>
-  <link rel="stylesheet" href="{% static 'css/styleNav.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/styleCatalogo.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/styleCarrito.css' %}" />
-</head>
-<body>
+{% block title %}Detalle{% endblock %}
+
+{% block content %}
+
+    <main class="detalle-container">
+        <div class="detalle-imagen-container">
+            <img class="detalle-imagen" src="{{ producto.url_imagen }}" alt="{{ producto.nombre }}">
+        </div>
+        <div class="detalle-info">
+    <h1>{{ producto.nombre }}</h1>
+    <p class="price">Precio: ${{ producto.precio|floatformat:0|intcomma|cut:".0" }}</p>
+    <div class="detalle-descripcion">
+        <p>{{ producto.descripcion }}</p>
+    </div>
+    <!-- Selección de proveedor/precio -->
+    <div class="detalle-precios">
+        <p><strong>Selecciona proveedor y precio:</strong></p>
+        <div id="botones-precio">
+            <!-- Aquí se llenan los botones de precio/proveedor dinámicamente -->
+        </div>
+    </div>
     
-  <header>
-    <a href="#" class="logo">TodoZapatillas</a>
-
-    <button class="menu-toggle" aria-label="Abrir menú" id="menuToggleBtn">☰</button>
-
-    <nav class="menu-principal" id="menuPrincipal">
-      <div class="menu-links">
-        <a href="/">Inicio</a>
-        <div class="menu-con-submenu">
-          <a href="#" class="submenu-toggle">Productos ▾</a>
-          <div class="submenu">
-            <a href="#">Zapatillas</a>
-            <a href="#">Chalas</a>
-          </div>
+    <!-- Tallas disponibles para el proveedor seleccionado -->
+    <div class="detalle-tallas">
+        <p><strong>Tallas disponibles:</strong></p>
+        <div id="tallas-grid">
+            <!-- Aquí se llenan las tallas dinámicamente -->
         </div>
-        <div class="menu-con-submenu">
-          <a href="#" class="submenu-toggle">Ofertas ▾</a>
-          <div class="submenu">
-            <a href="#">Rebajas</a>
-            <a href="#">Promociones</a>
-          </div>
+    </div>
+    
+    <!-- Colores disponibles para el proveedor seleccionado -->
+    <div class="detalle-colores">
+        <p><strong>Colores disponibles:</strong></p>
+        <div id="colores-grid">
+            <!-- Aquí se llenan los colores dinámicamente -->
         </div>
-        <a href="#">Soporte</a>
-      </div>
-
-      <form id="buscador" action="#" method="GET" class="buscador">
-        <input type="text" name="query" placeholder="Buscar productos..." aria-label="Buscar productos" />
-        <button type="submit">🔍</button>
-      </form>
-
-      <div class="user-cart">
-        <a href="/cart/" class="carrito" aria-label="Ver carrito">
-          🛒 <span id="contador-carrito" class="cart-count">0</span>
-        </a>
-        <div id="user-area">
-          <a href="#" id="login-link">Iniciar Sesión</a>
-        </div>
-        <div id="welcome-area" style="display:none;">
-          <span id="welcome-msg"></span>
-          <button id="logout-btn">Cerrar Sesión</button>
+    </div>
+    
+    <div class="detalle-botones">
+      <button type="button" class="btn-comprar" id="btn-comprar-ahora">Comprar ahora</button>
+      <button type="button" class="btn-carrito" id="btn-agregar-carrito">Añadir al carrito</button>
+    </div>
+    <div id="modal-carrito" class="modal-carrito" style="display:none;">
+      <div class="modal-carrito-content">
+        <p>Producto añadido al carrito.</p>
+        <div style="display:flex; gap:1rem; justify-content:center;">
+          <button id="seguir-navegando" class="btn-carrito">Seguir navegando</button>
+          <button id="ir-carrito" class="btn-comprar">Ir al carrito de compra</button>
         </div>
       </div>
-    </nav>
-  </header>
+    </div>
+    <script>
+      document.getElementById('btn-agregar-carrito').onclick = function() {
+        const color = document.querySelector('input[name="color"]:checked')?.value;
+        const talla = document.querySelector('input[name="talla"]:checked')?.value;
+        if (!color || !talla) {
+          alert('Por favor, selecciona color y talla antes de añadir al carrito');
+          return;
+        }
+        const producto = {
+          id: "{{ producto.id }}",
+          nombre: "{{ producto.nombre }}",
+          imagen: "{{ producto.url_imagen }}",
+          precio: {{ producto.precio|floatformat:0 }},
+          color,
+          talla,
+          cantidad: 1
+        };
+        // Usa la función global
+        if (window.agregarAlCarrito) window.agregarAlCarrito(producto);
+        // Muestra el modal
+        document.getElementById('modal-carrito').style.display = 'flex';
+      };
 
-  <!-- AJUSTE CLAVE: clase catalogo-grid para activar el diseño en CSS -->
-  <div id="catalogo" class="catalogo-grid">
-    {% for producto in productos %}
-      <div class="card" data-id="{{ producto.id }}">
-        <img src="{{ producto.url_imagen }}" alt="{{ producto.nombre }}">
-        <div class="card-content">
-          <h3>{{ producto.nombre }}</h3>
-          <p class="price">Desde ${{ producto.precio|floatformat:0|intcomma }}</p>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
+      document.getElementById('seguir-navegando').onclick = function() {
+        document.getElementById('modal-carrito').style.display = 'none';
+      };
 
+      document.getElementById('ir-carrito').onclick = function() {
+        window.location.href = "/cart/";
+      };
+    </script>
+</div>
+    </main>
   <script>
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', () => {
-        const id = card.getAttribute('data-id');
-        window.location.href = '/detalle/' + id + '/';
+      document.addEventListener('DOMContentLoaded', function() {
+          const radios = document.querySelectorAll('input[name="color"]');
+          const nombreColor = document.getElementById('nombre-color');
+          radios.forEach(radio => {
+              radio.addEventListener('change', function() {
+                  nombreColor.textContent = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+              });
+          });
       });
-    });
   </script>
-  <script src="{% static 'js/carrito.js' %}"></script>
-  <script src="{% static 'js/navFuncion.js' %}"></script>
-</body>
-</html>
+<script>
+  const variantes = {{ variantes_json|safe }};
+  let proveedorSeleccionado = null;
+
+  function renderProveedores() {
+      const cont = document.getElementById('botones-precio');
+      cont.innerHTML = '';
+      // Proveedores únicos
+      const proveedores = [];
+      variantes.forEach(v => {
+          if (!proveedores.some(p => p.nombre === v.proveedor && p.precio === v.precio)) {
+              proveedores.push({ nombre: v.proveedor, precio: v.precio });
+          }
+      });
+      proveedores.forEach((p, idx) => {
+          const checked = (proveedorSeleccionado === p.nombre || (!proveedorSeleccionado && idx === 0));
+          if (checked) proveedorSeleccionado = p.nombre;
+          cont.innerHTML += `
+              <input type="radio" id="proveedor-${idx}" name="proveedor" value="${p.nombre}" class="proveedor-radio" ${checked ? 'checked' : ''} style="display:none;">
+              <label for="proveedor-${idx}" class="proveedor-label">${p.nombre} - $${p.precio.toLocaleString('es-CL')}</label>
+          `;
+      });
+      document.querySelectorAll('input[name="proveedor"]').forEach(radio => {
+          radio.addEventListener('change', function() {
+              proveedorSeleccionado = this.value;
+              renderTallasYColores();
+          });
+      });
+  }
+
+  function renderTallasYColores() {
+      const variantesProveedor = variantes.filter(v => v.proveedor === proveedorSeleccionado);
+
+      // Tallas únicas
+      const tallas = [...new Set(variantesProveedor.map(v => v.talla))];
+      const tallasGrid = document.getElementById('tallas-grid');
+      tallasGrid.innerHTML = '';
+      tallas.forEach((talla, idx) => {
+          tallasGrid.innerHTML += `
+              <input type="radio" id="talla-${idx}" name="talla" value="${talla}" class="talla-radio" ${idx === 0 ? 'checked' : ''}>
+              <label for="talla-${idx}" class="talla-label">${talla}</label>
+          `;
+      });
+
+      // Colores únicos
+      const colores = [...new Set(variantesProveedor.map(v => v.color))];
+      const coloresGrid = document.getElementById('colores-grid');
+      coloresGrid.innerHTML = '';
+      colores.forEach((color, idx) => {
+          // Busca el colorcss correspondiente
+          const variante = variantesProveedor.find(v => v.color === color);
+          const colorcss = variante ? variante.colorcss : color;
+          coloresGrid.innerHTML += `
+              <input type="radio" id="color-${idx}" name="color" value="${color}" class="color-radio" ${idx === 0 ? 'checked' : ''}>
+              <label for="color-${idx}" class="color-label" style="background: ${colorcss};" title="${color}"></label>
+          `;
+      });
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+      renderProveedores();
+      renderTallasYColores();
+  });
+
+  document.getElementById('btn-agregar-carrito').onclick = function() {
+      const color = document.querySelector('input[name="color"]:checked')?.value;
+      const talla = document.querySelector('input[name="talla"]:checked')?.value;
+      if (!color || !talla) {
+        alert('Por favor, selecciona color y talla antes de añadir al carrito');
+        return;
+      }
+      const producto = {
+        id: "{{ producto.id }}",
+        nombre: "{{ producto.nombre }}",
+        imagen: "{{ producto.url_imagen }}",
+        proveedor: proveedorSeleccionado,
+        color,
+        talla,
+        cantidad: 1
+      };
+      if (window.agregarAlCarrito) window.agregarAlCarrito(producto);
+      document.getElementById('modal-carrito').style.display = 'flex';
+  };
+
+  document.getElementById('seguir-navegando').onclick = function() {
+      document.getElementById('modal-carrito').style.display = 'none';
+  };
+
+  document.getElementById('ir-carrito').onclick = function() {
+      window.location.href = "/cart/";
+  };
+
+  document.getElementById('btn-comprar-ahora').onclick = function() {
+      const color = document.querySelector('input[name="color"]:checked')?.value;
+      const talla = document.querySelector('input[name="talla"]:checked')?.value;
+      if (!color || !talla) {
+        alert('Por favor, selecciona color y talla antes de comprar');
+        return;
+      }
+      const producto = {
+        id: "{{ producto.id }}",
+        nombre: "{{ producto.nombre }}",
+        imagen: "{{ producto.url_imagen }}",
+        proveedor: proveedorSeleccionado,
+        color,
+        talla,
+        cantidad: 1
+      };
+      if (window.agregarAlCarrito) window.agregarAlCarrito(producto);
+      window.location.href = "/cart/";
+  };
+</script>
+{% endblock %}
