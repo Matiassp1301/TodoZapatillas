@@ -21,7 +21,7 @@ def registro(request):
             # guardar la fecha de nacimiento en un perfil
             auth_login(request, user)
             messages.success(request, "¡Registro exitoso! Bienvenido a TodoZapatillas.")
-            return redirect('inicio') 
+            return redirect('inicio.html') 
     else:
         form = RegistroUsuarioForm()
     return render(request, 'registro.html', {'form': form, 'title': 'Registro de Usuario'})
