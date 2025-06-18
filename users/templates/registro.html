@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleNav.css' %}">
+</head>
+
+<body>
+    <header>
+        <a href="/" class="logo">TodoZapatillas</a>
+    </header>
+    <div class="registro-container">
+        <h2>Crear cuenta</h2>
+        <form method="POST" class="registro-form" autocomplete="off">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="helptext">{{ field.help_text }}</div>
+            {% endif %}
+            {{ field.errors }}
+            {% endfor %}
+            <button type="submit" class="registro-btn">Registrarse</button>
+        </form>
+        <a href="/" class="registro-link">Volver al inicio</a>
+    </div>
+
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</body>
+
+</html>

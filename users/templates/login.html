@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleNav.css' %}">
+</head>
+
+<body>
+    <header>
+        <a href="/" class="logo">TodoZapatillas</a>
+    </header>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form method="POST" class="login-form" autocomplete="off">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="helptext">{{ field.help_text }}</div>
+            {% endif %}
+            {{ field.errors }}
+            {% endfor %}
+            <button type="submit" class="login-btn">Entrar</button>
+        </form>
+        <a href="{% url 'registro' %}" class="login-link">¿No tienes cuenta? Regístrate</a>
+        <a href="/" class="login-link">Volver al inicio</a>
+    </div>
+</body>
+
+</html>
