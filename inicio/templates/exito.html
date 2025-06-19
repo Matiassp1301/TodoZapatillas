@@ -1,45 +1,34 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pago Exitoso - Transbank</title>
-    <link rel="stylesheet" href="{% static 'css/stylepago.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styleexito.css' %}">
+    <link rel="stylesheet" href="{% static 'css/stylepago.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/styleexito.css' %}" />
 </head>
 <body>
     <div class="payment-container success-container">
         <div class="success-icon">✓</div>
         <h1>¡Pago Exitoso!</h1>
         <div class="transaction-details">
-            <p class="detail-item">
-                <span>Número de orden:</span>
-                <strong>#123456</strong>
-            </p>
-            <p class="detail-item">
-                <span>Monto:</span>
-                <strong  id="monto-pago">$0</strong>
-            </p>
-            <p class="detail-item">
-                <span>Fecha:</span>
-                <strong id="current-date"></strong>
-            </p>
+            <p><strong>Número de orden:</strong> #{{ orden.numero }}</p>
+            <p><strong>Monto:</strong> ${{  producto.precio 
+            <p><strong>Fecha:</strong> {{ orden.fecha|date:"d \d\e F \d\e Y" }}</p>
+
+            <ul>
+            {% for producto in productos %}
+                <li>{{ producto.nombre }} - Cantidad: {{ producto.cantidad }} - Precio: ${{ producto.precio }}</li>
+            {% empty %}
+                <li>No hay productos.</li>
+            {% endfor %}
+            </ul>
         </div>
         <button class="return-button" onclick="vaciarCarrito(); window.location.href='/'">Volver a la tienda</button>
     </div>
     <script>
-        function mostrarMontoPago() {
-            const monto = document.getElementById('monto-pago');
-            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            let total = 0;
-            carrito.forEach(producto => {
-                total += (producto.precio || 0) * (producto.cantidad || 1);
-            });
-            monto.textContent = '$' + total.toLocaleString('es-CL');
-        }
-        document.addEventListener('DOMContentLoaded', mostrarMontoPago);
-        
         function vaciarCarrito() {
             localStorage.removeItem('carrito');
             if (window.actualizarContadorCarrito) window.actualizarContadorCarrito();

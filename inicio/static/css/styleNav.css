@@ -202,3 +202,97 @@ header {
     display: flex;
   }
 }
+.user-cart {
+  position: relative;
+  display: flex;
+  gap: 25px; /* Mayor separación */
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Enlaces tipo "Mi cuenta" y "Cerrar sesión" */
+.nav-link {
+  text-decoration: none;
+  color: #ffffff;
+  background-color: transparent;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: red;
+  color: white;
+}
+
+.nav-welcome {
+  font-size: 1.4rem;              /* Tamaño grande */
+  font-weight: 700;               /* Más grueso */
+  color: #ffc107;                 /* Amarillo dorado para contraste */
+  font-family: 'Lora', serif;     /* Fuente elegante, puedes cambiarla si quieres */
+  padding: 5px 10px;
+     /* Fondo oscuro para destacar */
+  border-radius: 8px;
+}
+
+
+.modal-login-sugerencia {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content-login {
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 10px;
+  max-width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  font-family: 'Lora', serif;
+}
+
+.modal-content-login p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 10px 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#btn-ir-login {
+  background-color: #ff0000;
+  color: white;
+}
+
+#btn-ir-login:hover {
+  background-color: #b30000;
+}
+
+#btn-seguir-navegando {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+#btn-seguir-navegando:hover {
+  background-color: #c2c2c2;
+}

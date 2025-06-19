@@ -19,7 +19,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Importar las vistas de las paginas
-from inicio.views import inicio, carrito, detalle, exitoCompra, pago, filtros
+from inicio.views import inicio, carrito, detalle, pago, filtros, perfil_usuario,historial_vistos, guardar_orden,pago_exitoso
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     
@@ -30,6 +32,7 @@ urlpatterns = [
 
     # Path Carrito de compra
     path('cart/', carrito, name='carrito'), # app inicio, vista carrito
+
     # Path Perfil de usuario
 
     # Path Detalle de producto
@@ -37,8 +40,15 @@ urlpatterns = [
     # Path Pago
     path('transbank/', pago, name='pago'),
     # Path Exito de compra
-    path('compra/', exitoCompra, name='exitoCompra'),
+    path('compra/', pago_exitoso, name='pago_exitoso'),
+    path('guardar-orden/', guardar_orden, name='guardar_orden'),
     # Path Filtros
-    path('filtros/', filtros, name='filtros'),             
-    
+    path('filtros/', filtros, name='filtros'),
+    # Path de autenticación de usuarios
+    path('users/', include(('users.urls', 'users'), namespace='users')), 
+    #Path perfil de usuario
+    path('perfil/', perfil_usuario, name='perfil'),       
+    path('historial-pagos/', guardar_orden, name='historial_pagos'),
+    path('historial-vistos/', historial_vistos, name='historial_vistos'),
+
 ]

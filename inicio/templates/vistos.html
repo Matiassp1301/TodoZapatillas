@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+<div class="productos-vistos">
+  <h2>Productos que has visto</h2>
+  <ul>
+    {% for producto in productos %}
+    <li>
+      <img src="{{ producto.url_imagen }}" alt="{{ producto.nombre }}">
+      <div class="info">
+        <div class="nombre">{{ producto.nombre }}</div>
+        <div class="precio">${{ producto.precio|floatformat:0 }}</div>
+      </div>
+      <a href="{% url 'detalle' producto.id %}" class="ver-detalle">Ver</a>
+    </li>
+    {% empty %}
+    <p>No has visto productos aún.</p>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

@@ -1,13 +1,20 @@
-from django.shortcuts import render
-from django.http import HttpResponse 
-from django.shortcuts import get_object_or_404
-from .models import Producto
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, JsonResponse
+from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction as db_transaction
+from django.db.models import Min, Avg, Max, Count
+from django.utils import timezone
+import json, random, uuid
+from datetime import datetime
+
+from .models import ProductoSQL, Orden, ProductoOrdenado
+
 from transbank.webpay.webpay_plus.transaction import Transaction
 from transbank.common.integration_type import IntegrationType
-import json
-from django.db.models import Min, Avg, Max, Count
-from django.shortcuts import render
-from .models import ProductoSQL
+
+
 
 def inicio(request):
     productos = (
@@ -25,6 +32,7 @@ def inicio(request):
     categorias = ProductoSQL.objects.values_list('categoria', flat=True).distinct().order_by('categoria')
     return render(request, 'inicio.html', {'productos': productos, 'categorias': categorias})
 # Create your views here.
+@login_required(login_url=reverse_lazy('users:login'))
 def carrito(request):
     categorias = ProductoSQL.objects.values_list('categoria', flat=True).distinct().order_by('categoria')
     return render(request, 'carrito.html', {'categorias': categorias})
@@ -80,6 +88,11 @@ def detalle(request, producto_id):
         }
         for v in variantes
     ])
+    historial = request.session.get('historial_vistos', [])
+    if producto.id not in historial:
+        historial.append(producto.id)
+        request.session['historial_vistos'] = historial
+
     categorias = ProductoSQL.objects.values_list('categoria', flat=True).distinct().order_by('categoria')
     return render(request, 'detalle.html', {
         'producto': producto,
@@ -91,7 +104,8 @@ def detalle(request, producto_id):
         'cantidades': cantidades,
         'variantes': variantes,
         'variantes_json': variantes_json,  # <-- ¡Esto es lo importante!
-        'categorias': categorias
+        'categorias': categorias,
+        'usuario_logueado': request.user.is_authenticated
     })
 
 def iniciar_pago(request):
@@ -110,9 +124,68 @@ def iniciar_pago(request):
 def pago(request):
     return render(request, 'pago.html')
 
-def exitoCompra(request):
-    return render(request, 'exito.html')
 
+
+@login_required
+def pago_exitoso(request):
+    usuario = request.user
+    try:
+        orden = Orden.objects.filter(usuario=usuario).latest('fecha')
+        productos = orden.productos.all()  # usa related_name 'productos'
+    except Orden.DoesNotExist:
+        orden = None
+        productos = []
+
+    contexto = {
+        'orden_numero': orden.numero,
+        'monto': orden.total,
+        'fecha': orden.fecha,
+        'productos': productos,
+    }
+    return render(request, 'exito.html', contexto)
+
+@login_required
+@csrf_exempt
+@login_required
+@csrf_exempt
+@csrf_exempt
+def guardar_orden(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            carrito = data.get('carrito', [])
+            if not carrito:
+                return JsonResponse({'error': 'Carrito vacío'}, status=400)
+
+            total = 0
+            for item in carrito:
+                total += float(item['precio']) * int(item['cantidad'])
+
+            with db_transaction.atomic():
+                numero_orden = uuid.uuid4().hex[:10].upper()
+                orden = Orden.objects.create(
+                    usuario=request.user,
+                    fecha=timezone.now(),
+                    numero=numero_orden,
+                    total=total
+                )
+                for item in carrito:
+                    ProductoOrdenado.objects.create(
+                        orden=orden,
+                        nombre=item['nombre'],
+                        cantidad=item['cantidad'],
+                        precio=item['precio']
+                    )
+            return JsonResponse({
+                'orden_numero': orden.numero,
+                'monto': orden.total,
+                'fecha': orden.fecha.strftime('%Y-%m-%d %H:%M:%S'),
+                'mensaje': 'Orden guardada correctamente.'
+            })
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 def filtros(request):
     # Obtener filtros seleccionados
@@ -259,3 +332,65 @@ def filtros(request):
         'tipo_sel': tipo,
         'query': query,
     })
+
+def perfil_usuario(request):
+    return render(request, 'perfil_usuario.html', {
+        'usuario': request.user
+    })
+
+
+@login_required
+def historial_vistos(request):
+    ids = request.session.get('historial_vistos', [])
+    from django.db.models import Case, When
+    orden_preservado = Case(*[When(id=pk, then=pos) for pos, pk in enumerate(ids)])
+    productos = ProductoSQL.objects.filter(id__in=ids).order_by(orden_preservado)
+    return render(request, 'vistos.html', {'productos': productos})
+
+
+    if request.method == 'POST':
+        try:
+            # Leer carrito desde JSON recibido en POST
+            data = json.loads(request.body)
+            carrito = data.get('carrito', [])
+
+            if not carrito:
+                return JsonResponse({'error': 'Carrito vacío'}, status=400)
+
+            with db_transaction.atomic():
+                # Generar número único para la orden (10 caracteres hexadecimales)
+                numero_orden = uuid.uuid4().hex[:10].upper()
+
+                # Calcular total sumando precio*cantidad de cada producto
+                total = sum(item['precio'] * item['cantidad'] for item in carrito)
+
+                # Crear la orden
+                orden = Orden.objects.create(
+                    usuario=request.user,
+                    fecha=timezone.now(),
+                    numero=numero_orden,
+                    total=total
+                )
+
+                # Guardar productos ordenados relacionados a la orden
+                for item in carrito:
+                    ProductoOrdenado.objects.create(
+                        orden=orden,
+                        producto_id=item['producto_id'],  # asumiendo campo FK a ProductoSQL o similar
+                        cantidad=item['cantidad'],
+                        precio=item['precio']
+                    )
+
+            # Retornar datos de la orden para confirmar éxito
+            return JsonResponse({
+                'orden_numero': orden.numero,
+                'monto': orden.total,
+                'fecha': orden.fecha.strftime('%Y-%m-%d %H:%M:%S'),
+                'mensaje': 'Orden guardada correctamente.'
+            })
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)

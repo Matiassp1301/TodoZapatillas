@@ -97,6 +97,34 @@
       });
   </script>
 <script>
+  const usuarioLogueado = {{ usuario_logueado|yesno:"true,false" }};
+
+function mostrarModalLogin() {
+  const loginUrl = "{% url 'users:login' %}?next=" + encodeURIComponent(window.location.pathname);
+  const modalHtml = `
+    <div id="modal-login" style="
+      position: fixed; top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:9999;
+    ">
+      <div style="background:white; padding:20px; border-radius:8px; max-width: 320px; text-align:center;">
+        <p>Para continuar debes iniciar sesión.</p>
+        <div style="display:flex; justify-content: center; gap: 10px; margin-top: 15px;">
+          <button id="seguir-navegando-login" style="padding:8px 14px;">Seguir navegando</button>
+          <button id="iniciar-sesion" style="padding:8px 14px; background:#007bff; color:white; border:none; border-radius:4px;">Iniciar sesión</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  document.getElementById('seguir-navegando-login').onclick = () => {
+    document.getElementById('modal-login').remove();
+  };
+  document.getElementById('iniciar-sesion').onclick = () => {
+    window.location.href = loginUrl;
+  };
+}
+
   const variantes = {{ variantes_json|safe }};
   let proveedorSeleccionado = null;
 
@@ -160,52 +188,109 @@
       renderTallasYColores();
   });
 
-  document.getElementById('btn-agregar-carrito').onclick = function() {
-      const color = document.querySelector('input[name="color"]:checked')?.value;
-      const talla = document.querySelector('input[name="talla"]:checked')?.value;
-      if (!color || !talla) {
-        alert('Por favor, selecciona color y talla antes de añadir al carrito');
-        return;
-      }
-      const producto = {
-        id: "{{ producto.id }}",
-        nombre: "{{ producto.nombre }}",
-        imagen: "{{ producto.url_imagen }}",
-        proveedor: proveedorSeleccionado,
-        color,
-        talla,
-        cantidad: 1
-      };
-      if (window.agregarAlCarrito) window.agregarAlCarrito(producto);
-      document.getElementById('modal-carrito').style.display = 'flex';
+document.getElementById('btn-agregar-carrito').onclick = function () {
+  if (!usuarioLogueado) {
+    mostrarModalLogin();
+    return;
+  }
+
+  const color = document.querySelector('input[name="color"]:checked')?.value;
+  const talla = document.querySelector('input[name="talla"]:checked')?.value;
+  if (!color || !talla) {
+    alert('Por favor, selecciona color y talla antes de añadir al carrito');
+    return;
+  }
+
+  // Obtener el precio correcto para el proveedor seleccionado
+  const varianteSeleccionada = variantes.find(v => v.proveedor === proveedorSeleccionado);
+  const precio = varianteSeleccionada ? Number(varianteSeleccionada.precio) : 0;
+
+  const producto = {
+    id: "{{ producto.id }}",
+    nombre: "{{ producto.nombre }}",
+    imagen: "{{ producto.url_imagen }}",
+    proveedor: proveedorSeleccionado,
+    color,
+    talla,
+    cantidad: 1,
+    precio: precio
   };
 
-  document.getElementById('seguir-navegando').onclick = function() {
-      document.getElementById('modal-carrito').style.display = 'none';
+  if (window.agregarAlCarrito) {
+    window.agregarAlCarrito(producto);
+    document.getElementById('modal-carrito').style.display = 'flex';
+  }
+};
+
+document.getElementById('btn-comprar-ahora').onclick = function () {
+  if (!usuarioLogueado) {
+    mostrarModalLogin();
+    return;
+  }
+
+  const color = document.querySelector('input[name="color"]:checked')?.value;
+  const talla = document.querySelector('input[name="talla"]:checked')?.value;
+  if (!color || !talla) {
+    alert('Por favor, selecciona color y talla antes de comprar');
+    return;
+  }
+
+  // Precio según proveedor seleccionado
+  const varianteSeleccionada = variantes.find(v => v.proveedor === proveedorSeleccionado);
+  const precio = varianteSeleccionada ? Number(varianteSeleccionada.precio) : 0;
+
+  const producto = {
+    id: "{{ producto.id }}",
+    nombre: "{{ producto.nombre }}",
+    imagen: "{{ producto.url_imagen }}",
+    proveedor: proveedorSeleccionado,
+    color,
+    talla,
+    cantidad: 1,
+    precio: precio
   };
 
-  document.getElementById('ir-carrito').onclick = function() {
-      window.location.href = "/cart/";
+  if (window.agregarAlCarrito) {
+    window.agregarAlCarrito(producto);
+  }
+
+  window.location.href = "/cart/";
+};
+
+document.getElementById('btn-comprar-ahora').onclick = function () {
+  if (!usuarioLogueado) {
+    mostrarModalLogin();
+    return; // evita seguir si no está logueado
+  }
+
+  const color = document.querySelector('input[name="color"]:checked')?.value;
+  const talla = document.querySelector('input[name="talla"]:checked')?.value;
+  if (!color || !talla) {
+    alert('Por favor, selecciona color y talla antes de comprar');
+    return;
+  }
+
+  // Obtener precio para el proveedor seleccionado
+  const varianteSeleccionada = variantes.find(v => v.proveedor === proveedorSeleccionado);
+  const precio = varianteSeleccionada ? Number(varianteSeleccionada.precio) : 0;
+
+  const producto = {
+    id: "{{ producto.id }}",
+    nombre: "{{ producto.nombre }}",
+    imagen: "{{ producto.url_imagen }}",
+    proveedor: proveedorSeleccionado,
+    color,
+    talla,
+    cantidad: 1,
+    precio: precio
   };
 
-  document.getElementById('btn-comprar-ahora').onclick = function() {
-      const color = document.querySelector('input[name="color"]:checked')?.value;
-      const talla = document.querySelector('input[name="talla"]:checked')?.value;
-      if (!color || !talla) {
-        alert('Por favor, selecciona color y talla antes de comprar');
-        return;
-      }
-      const producto = {
-        id: "{{ producto.id }}",
-        nombre: "{{ producto.nombre }}",
-        imagen: "{{ producto.url_imagen }}",
-        proveedor: proveedorSeleccionado,
-        color,
-        talla,
-        cantidad: 1
-      };
-      if (window.agregarAlCarrito) window.agregarAlCarrito(producto);
-      window.location.href = "/cart/";
-  };
+  if (window.agregarAlCarrito) {
+    window.agregarAlCarrito(producto); // agregar producto al carrito
+  }
+
+  window.location.href = "/cart/"; // redirigir al carrito para compra
+};
+
 </script>
 {% endblock %}

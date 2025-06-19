@@ -21,7 +21,7 @@ def registro(request):
             # guardar la fecha de nacimiento en un perfil
             auth_login(request, user)
             messages.success(request, "¡Registro exitoso! Bienvenido a TodoZapatillas.")
-            return redirect('inicio.html') 
+            return redirect('inicio') 
     else:
         form = RegistroUsuarioForm()
     return render(request, 'registro.html', {'form': form, 'title': 'Registro de Usuario'})
@@ -44,7 +44,11 @@ def login(request):
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
-
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('inicio')
 
 

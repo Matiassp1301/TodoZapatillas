@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+  <!-- Menú lateral -->
+  <aside class="profile-sidebar">
+    <h3>Mi Cuenta</h3>
+    <ul>
+      <li><a href="{% url 'historial_vistos' %}">Productos vistos</a></li>
+      <li><a href="/cart/">Carrito</a></li>
+      <li><a href="#">Valoraciones</a></li>
+      <li><a href="#">Seguimiento de pedidos</a></li>
+      <li><a href="{% url 'historial_pagos' %}">Historial de pagos</a></li>
+      <li><a href="#">Soporte al cliente</a></li>
+    </ul>
+  </aside>
+
+  <!-- Panel derecho -->
+  <section class="profile-main">
+    <div class="profile-header">
+      <div class="avatar">{{ usuario.first_name.0|default:"U" }}</div>
+      <div>
+        <h2>{{ usuario.first_name|default:usuario.username }}</h2>
+        <p>Bienvenido/a a tu panel de gestión</p>
+      </div>
+    </div>
+
+    <div class="profile-options">
+      <a href="/cart/" class="option">🛒 Carrito</a>
+      <div class="option">📦 Pedidos</div>
+      <a href="{% url 'historial_pagos' %}" class="option">💳 Pagos</a>
+      <div class="option">⭐ Valoraciones</div>
+      <div class="option">🎯 Enviados</div>
+      <div class="option">🛠 Soporte</div>
+    </div>
+  </section>
+</div>
+{% endblock %}
