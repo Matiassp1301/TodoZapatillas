@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Importar las vistas de las paginas
-from inicio.views import inicio, carrito, detalle, pago, filtros, perfil_usuario,historial_vistos, guardar_orden,pago_exitoso
+from inicio.views import inicio, carrito, detalle, pago, filtros, perfil_usuario,historial_vistos, guardar_orden,pago_exitoso, historial_pagos
 
 
 urlpatterns = [
@@ -48,7 +48,7 @@ urlpatterns = [
     path('users/', include(('users.urls', 'users'), namespace='users')), 
     #Path perfil de usuario
     path('perfil/', perfil_usuario, name='perfil'),       
-    path('historial-pagos/', guardar_orden, name='historial_pagos'),
+    path('historial-pagos/',historial_pagos, name='historial_pagos'),
     path('historial-vistos/', historial_vistos, name='historial_vistos'),
 
 ]

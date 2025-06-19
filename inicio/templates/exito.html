@@ -15,7 +15,7 @@
         <h1>¡Pago Exitoso!</h1>
         <div class="transaction-details">
             <p><strong>Número de orden:</strong> #{{ orden.numero }}</p>
-            <p><strong>Monto:</strong> ${{  producto.precio 
+            <p><strong>Monto:</strong> ${{  orden.total }}</p>
             <p><strong>Fecha:</strong> {{ orden.fecha|date:"d \d\e F \d\e Y" }}</p>
 
             <ul>

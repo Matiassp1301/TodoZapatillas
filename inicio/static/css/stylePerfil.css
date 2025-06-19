@@ -259,3 +259,57 @@
     text-align: center;
   }
 }
+
+
+
+.titulo {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.tabla-pagos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tabla-pagos th,
+.tabla-pagos td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.tabla-pagos thead {
+  background-color: #ff0000;
+  color: white;
+}
+
+.tabla-pagos tr:hover {
+  background-color: #f2f2f2;
+}
+
+.estado {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.estado.pagado {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.mensaje-vacio {
+  text-align: center;
+  color: #888;
+  font-size: 18px;
+  margin-top: 30px;
+}

@@ -131,15 +131,13 @@ def pago_exitoso(request):
     usuario = request.user
     try:
         orden = Orden.objects.filter(usuario=usuario).latest('fecha')
-        productos = orden.productos.all()  # usa related_name 'productos'
+        productos = orden.productos.all()
     except Orden.DoesNotExist:
         orden = None
         productos = []
 
     contexto = {
-        'orden_numero': orden.numero,
-        'monto': orden.total,
-        'fecha': orden.fecha,
+        'orden': orden,
         'productos': productos,
     }
     return render(request, 'exito.html', contexto)
@@ -346,6 +344,25 @@ def historial_vistos(request):
     orden_preservado = Case(*[When(id=pk, then=pos) for pos, pk in enumerate(ids)])
     productos = ProductoSQL.objects.filter(id__in=ids).order_by(orden_preservado)
     return render(request, 'vistos.html', {'productos': productos})
+
+def historial_pagos(request):
+    usuario = request.user
+    ordenes = Orden.objects.filter(usuario=usuario).order_by('-fecha')
+
+    # Recolectar todos los productos por orden
+    compras = []
+    for orden in ordenes:
+        for producto in orden.productos.all():
+            compras.append({
+                'producto': producto.nombre,
+                'cantidad': producto.cantidad,
+                'total': producto.precio * producto.cantidad,
+                'fecha': orden.fecha,
+                'estado': 'Pagado',  # puedes agregar un campo real si lo tienes
+            })
+
+    return render(request, 'historial_pagos.html', {'compras': compras})
+
 
 
     if request.method == 'POST':

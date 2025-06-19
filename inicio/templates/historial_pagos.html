@@ -3,10 +3,18 @@
 {% block title %}Historial de Pagos{% endblock %}
 
 {% block content %}
-<h2>Historial de Pagos</h2>
-<table>
+<h2 class="titulo">Historial de Pagos</h2>
+
+{% if compras %}
+<table class="tabla-pagos">
   <thead>
-    <tr><th>Producto</th><th>Cantidad</th><th>Total</th><th>Fecha</th><th>Estado</th></tr>
+    <tr>
+      <th>Producto</th>
+      <th>Cantidad</th>
+      <th>Total</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+    </tr>
   </thead>
   <tbody>
     {% for compra in compras %}
@@ -15,10 +23,13 @@
       <td>{{ compra.cantidad }}</td>
       <td>${{ compra.total|floatformat:0 }}</td>
       <td>{{ compra.fecha|date:"d/m/Y H:i" }}</td>
-      <td>{{ compra.estado }}</td>
+      <td><span class="estado pagado">{{ compra.estado }}</span></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+{% else %}
+<p class="mensaje-vacio">No has realizado compras aún.</p>
+{% endif %}
 
 {% endblock %}
